@@ -1,0 +1,4 @@
+name: PlayerLead
+main: playerlead.PlayerLead
+version: 0.1
+description: Be a master, get slaves!
