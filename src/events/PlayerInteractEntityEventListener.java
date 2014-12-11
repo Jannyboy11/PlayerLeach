@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
@@ -19,6 +20,7 @@ public class PlayerInteractEntityEventListener implements Listener {
 		plugin = pl;
 	}
 	
+	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEntityEvent e){
 		
 		Player master = e.getPlayer();
