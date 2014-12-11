@@ -45,9 +45,9 @@ public class PlayerInteractEntityEventListener implements Listener {
 	
 	public void addMaster(Player slave, Player master){
 		if (plugin.slaveMasters.keySet().contains(slave.getUniqueId())){
-			plugin.slaveMasters.get(slave.getUniqueId()).add(master.getUniqueId());
+			master.sendMessage("You cannot steal " + slave.getName() + " since he's already enslaved!");
 		} else {
-			plugin.slaveMasters.put(slave.getUniqueId(), Arrays.asList(new UUID[]{master.getUniqueId()}));
+			plugin.slaveMasters.put(slave.getUniqueId(), master.getUniqueId());
 		}
 	}
 
