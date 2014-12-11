@@ -45,5 +45,9 @@ public class PlayerLead extends JavaPlugin {
 		lasso.getItemMeta().setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!"}));
 		return lasso;
 	}
+	
+	public static void main(String[] args){
+		System.out.println("NOOB THIS IS NOT HOW YOU RUN THIS");
+	}
 
 }
