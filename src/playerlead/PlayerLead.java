@@ -30,6 +30,7 @@ public class PlayerLead extends JavaPlugin {
 	
 	public void onEnable(){
 		theLeash.getItemMeta().setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!"}));
+		
 		logger.info("onEnable has been invoked!");
 		//initialise stuff! :D
 		server = getServer();
@@ -49,11 +50,14 @@ public class PlayerLead extends JavaPlugin {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("getleash") && args.length == 1) {
+		if (cmd.getName().equalsIgnoreCase("giveleash") && args.length == 1) {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage("This command can only be run by a player.");
 			} else {
 				Player player = server.getPlayer(args[0]);
+				if (!sender.isOp() || !player.isOnline())
+					return false;
+				
 				player.getInventory().addItem(getLasso());
 			}
 			return true;
