@@ -6,8 +6,12 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,10 +23,13 @@ public class PlayerLead extends JavaPlugin {
 	 * gebruik logger.info(someMessage) of logger.warning(someMessage) of logger.severe(someMessage) om info naar de serverconsole te printen.
 	 */
 	public final Logger logger = Logger.getLogger("Minecraft");
+	private static final ItemStack theLeash = new ItemStack(Material.LEASH);
+	
 	public static Server server;
 	public HashMap<UUID, UUID> slaveMasters;
 	
 	public void onEnable(){
+		theLeash.getItemMeta().setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!"}));
 		logger.info("onEnable has been invoked!");
 		//initialise stuff! :D
 		server = getServer();
@@ -40,10 +47,24 @@ public class PlayerLead extends JavaPlugin {
 		
 	}
 	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (cmd.getName().equalsIgnoreCase("getleash") && args.length == 1) {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage("This command can only be run by a player.");
+			} else {
+				Player player = server.getPlayer(args[0]);
+				player.getInventory().addItem(getLasso());
+			}
+			return true;
+		}
+		return false;
+	}
+	
 	public ItemStack getLasso(){
-		ItemStack lasso = new ItemStack(Material.LEASH);
-		lasso.getItemMeta().setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!"}));
-		return lasso;
+		
+		
+		return theLeash;
 	}
 	
 	public static void main(String[] args){

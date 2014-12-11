@@ -2,3 +2,10 @@ name: PlayerLead
 main: playerlead.PlayerLead
 version: 0.1
 description: Be a master, get slaves!
+
+commands:
+   getleash:
+      description: Wanna give someone cool leashing powers? Use dis.
+      usage: /<command>
+      permission: None
+      permission-message: You don't have <permission>
