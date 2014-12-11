@@ -20,7 +20,7 @@ public class PlayerLead extends JavaPlugin {
 	 */
 	public final Logger logger = Logger.getLogger("Minecraft");
 	public static Server server;
-	public HashMap<UUID, List<UUID>> slaveMasters;
+	public HashMap<UUID, UUID> slaveMasters;
 	
 	public void onEnable(){
 		logger.info("onEnable has been invoked!");
@@ -29,7 +29,7 @@ public class PlayerLead extends JavaPlugin {
 		server.getPluginManager().registerEvents(new PlayerInteractEntityEventListener(this), this);
 		//UUID is serialisable, dus als je die wilt laden uit een file met een objectinputstream, dan kan dat! :D
 		//voor nu maak ik gewoon een nieuwe lege hashmap aan.
-		slaveMasters = new HashMap<UUID, List<UUID>>();
+		slaveMasters = new HashMap<UUID, UUID>();
 		
 	}
 	
