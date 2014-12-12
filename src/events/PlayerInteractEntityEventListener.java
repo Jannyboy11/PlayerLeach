@@ -36,7 +36,7 @@ public class PlayerInteractEntityEventListener implements Listener {
 	
 	public boolean checkLasso(Player p){
 		//Sorry Jb, ItemStack is niet metaDatable, dus ik gebruik lore i.p.v. metaData.
-		return (plugin.getLasso().equals(new ItemStack(p.getItemInHand().getType())));
+		return (plugin.getLasso().equals(new ItemStack(p.getItemInHand())));
 	}
 	
 	public void addMaster(Player slave, Player master){
