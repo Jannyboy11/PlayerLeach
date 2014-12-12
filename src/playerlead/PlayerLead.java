@@ -14,27 +14,42 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import events.PlayerInteractEntityEventListener;
+import events.PlayerMovementListener;
 
 public class PlayerLead extends JavaPlugin {
 	/*
 	 * gebruik logger.info(someMessage) of logger.warning(someMessage) of logger.severe(someMessage) om info naar de serverconsole te printen.
 	 */
 	public final Logger logger = Logger.getLogger("Minecraft");
+	
+	/**
+	 * The Special leash that gets created to bind players.
+	 */
 	private static final ItemStack theLeash = new ItemStack(Material.LEASH);
+	
+	/**
+	 * The max distance a slave may be away from the master.
+	 */
+	public static final double maxDistance = 5;
 	
 	public static Server server;
 	public HashMap<UUID, UUID> slaveMasters;
 	
 	public void onEnable(){
-		theLeash.getItemMeta().setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!"}));
+		ItemMeta a = theLeash.getItemMeta();
+		a.setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!","","§8§o WE ARE NOT HELD ACCOUNTABLE"}));
+		a.setDisplayName("§fThe Human §8\"Leash\"");;
+		theLeash.setItemMeta(a);
 		
 		logger.info("onEnable has been invoked!");
 		//initialise stuff! :D
 		server = getServer();
 		server.getPluginManager().registerEvents(new PlayerInteractEntityEventListener(this), this);
+		server.getPluginManager().registerEvents(new PlayerMovementListener(this), this);
 		//UUID is serialisable, dus als je die wilt laden uit een file met een objectinputstream, dan kan dat! :D
 		//voor nu maak ik gewoon een nieuwe lege hashmap aan.
 		slaveMasters = new HashMap<UUID, UUID>();
@@ -55,7 +70,7 @@ public class PlayerLead extends JavaPlugin {
 				sender.sendMessage("This command can only be run by a player.");
 			} else {
 				Player player = server.getPlayer(args[0]);
-				if (!sender.isOp() || !player.isOnline())
+				if (!sender.isOp() || player == null || !player.isOnline())
 					return false;
 				
 				player.getInventory().addItem(getLasso());
@@ -64,6 +79,8 @@ public class PlayerLead extends JavaPlugin {
 		}
 		return false;
 	}
+	
+	
 	
 	public ItemStack getLasso(){
 		

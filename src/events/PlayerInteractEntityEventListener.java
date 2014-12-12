@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.ItemStack;
 
 import playerlead.PlayerLead;
 
@@ -25,22 +26,16 @@ public class PlayerInteractEntityEventListener implements Listener {
 		
 		Player master = e.getPlayer();
 		Entity entity = e.getRightClicked();
-		
+		plugin.logger.info("before");
 		if (checkLasso(master) && entity instanceof Player){
-			//player caught another player! :P
-			Player slave = (Player) entity;
-			
-			//JB IT'S UP TO YOU FROM HERE
-			//e.g.: addMaster(slave, master);
-			
+			addMaster((Player)entity,master);
 		}
 		
 	}
 	
 	public boolean checkLasso(Player p){
 		//Sorry Jb, ItemStack is niet metaDatable, dus ik gebruik lore i.p.v. metaData.
-		return (p.getItemInHand().getType() == plugin.getLasso().getType()
-				&& p.getItemInHand().equals(plugin.getLasso()));
+		return (plugin.getLasso().equals(new ItemStack(p.getItemInHand().getType())));
 	}
 	
 	public void addMaster(Player slave, Player master){
@@ -48,6 +43,8 @@ public class PlayerInteractEntityEventListener implements Listener {
 			master.sendMessage("You cannot steal " + slave.getName() + " since he's already enslaved!");
 		} else {
 			plugin.slaveMasters.put(slave.getUniqueId(), master.getUniqueId());
+			master.sendMessage(slave.getName() + " has been added to your slaves. >:)");
+			slave.sendMessage(master.getName() +" has caught you! you are now his slave.");
 		}
 	}
 
