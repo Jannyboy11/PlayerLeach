@@ -18,7 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import events.PlayerInteractEntityEventListener;
-import events.PlayerMovementListener;
+import events.PlayerMoveEventListener;
 
 public class PlayerLead extends JavaPlugin {
 	/*
@@ -49,7 +49,7 @@ public class PlayerLead extends JavaPlugin {
 		//initialise stuff! :D
 		server = getServer();
 		server.getPluginManager().registerEvents(new PlayerInteractEntityEventListener(this), this);
-		server.getPluginManager().registerEvents(new PlayerMovementListener(this), this);
+		server.getPluginManager().registerEvents(new PlayerMoveEventListener(this), this);
 		//UUID is serialisable, dus als je die wilt laden uit een file met een objectinputstream, dan kan dat! :D
 		//voor nu maak ik gewoon een nieuwe lege hashmap aan.
 		slaveMasters = new HashMap<UUID, UUID>();
