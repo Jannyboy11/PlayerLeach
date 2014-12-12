@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -41,8 +42,8 @@ public class PlayerLead extends JavaPlugin {
 	
 	public void onEnable(){
 		ItemMeta a = theLeash.getItemMeta();
-		a.setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!","","§8§o WE ARE NOT HELD ACCOUNTABLE"}));
-		a.setDisplayName("§fThe Human §8\"Leash\"");;
+		a.setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!","",ChatColor.GRAY + "" +  ChatColor.ITALIC+" WE ARE NOT HELD ACCOUNTABLE"}));
+		a.setDisplayName(ChatColor.WHITE+ "The Human "+ ChatColor.GRAY +"\"Leash\"");;
 		theLeash.setItemMeta(a);
 		
 		logger.info("onEnable has been invoked!");
