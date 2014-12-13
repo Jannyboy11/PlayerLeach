@@ -18,6 +18,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import playerlead.Attributes.Attribute;
+import playerlead.Attributes.AttributeType;
 import events.MasterSlaveOnHitListener;
 import events.PlayerInteractEntityEventListener;
 import events.PlayerMovementListener;
@@ -91,9 +93,10 @@ public class PlayerLead extends JavaPlugin {
 	
 	
 	public ItemStack getLasso(){
-		
-		
-		return theLeash;
+		Attributes test = new Attributes(theLeash);
+		 test.add(Attribute.newBuilder().name("Damage")
+				 .type(AttributeType.GENERIC_ATTACK_DAMAGE).amount(500).build());
+		return test.getStack();
 	}
 	
 	public static void main(String[] args){
