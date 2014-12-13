@@ -88,7 +88,7 @@ public class PlayerLead extends JavaPlugin {
 	
 	public boolean checkLasso(Player p){
 		//Sorry Jb, ItemStack is niet metaDatable, dus ik gebruik lore i.p.v. metaData.
-		return (getLasso().equals(p.getItemInHand()));
+		return (getLasso().getItemMeta().getLore().equals(p.getItemInHand().getItemMeta().getLore()));
 	}
 	
 	
