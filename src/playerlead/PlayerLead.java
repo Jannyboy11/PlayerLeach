@@ -1,5 +1,6 @@
 package playerlead;
 
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -12,11 +13,20 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import playerlead.Attributes.Attribute;
 import playerlead.Attributes.AttributeType;
@@ -42,9 +52,10 @@ public class PlayerLead extends JavaPlugin {
 	
 	public static Server server;
 	public HashMap<UUID, UUID> slaveMasters;
+	public HashMap<Player,Horse> horsePlayerPair;
 	
 	public void onEnable(){
-		
+		horsePlayerPair = new HashMap<Player,Horse>();
 		ItemMeta a = theLeash.getItemMeta();
 		a.setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!","",ChatColor.GRAY + "" +  ChatColor.ITALIC+" WE ARE NOT HELD ACCOUNTABLE"}));
 		a.setDisplayName(ChatColor.WHITE+ "The Human "+ ChatColor.GRAY +"\"Leash\"");;
@@ -88,6 +99,8 @@ public class PlayerLead extends JavaPlugin {
 	
 	public boolean checkLasso(Player p){
 		//Sorry Jb, ItemStack is niet metaDatable, dus ik gebruik lore i.p.v. metaData.
+
+
 		return (getLasso().getItemMeta().getLore().equals(p.getItemInHand().getItemMeta().getLore()));
 	}
 	
@@ -95,7 +108,7 @@ public class PlayerLead extends JavaPlugin {
 	public ItemStack getLasso(){
 		Attributes test = new Attributes(theLeash);
 		 test.add(Attribute.newBuilder().name("Damage")
-				 .type(AttributeType.GENERIC_ATTACK_DAMAGE).amount(500).build());
+				 .type(AttributeType.GENERIC_ATTACK_DAMAGE).amount(-20).build());
 		
 		return test.getStack();
 	}

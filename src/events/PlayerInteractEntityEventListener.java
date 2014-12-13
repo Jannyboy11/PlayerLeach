@@ -4,12 +4,18 @@ import java.util.Arrays;
 import java.util.UUID;
 import java.util.ArrayList;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Horse.Style;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import playerlead.PlayerLead;
 
@@ -46,6 +52,18 @@ public class PlayerInteractEntityEventListener implements Listener {
 			slave.sendMessage(master.getName() +" has caught you! you are now his slave.");
 			PlayerLead.server.broadcastMessage(slave.setLeashHolder(master) +"");
 		}
+	}
+	
+	public void spawnHorse(Player slave, Player master) {
+		Location l  = slave.getLocation();
+		l.setY(230);
+		Horse spawned = (Horse)slave.getWorld().spawnEntity(l, EntityType.HORSE);
+		spawned.setCustomNameVisible(false);
+		spawned.setMaxDomestication(99999999);
+		spawned.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0,true));
+		spawned.teleport(slave);
+		spawned.setLeashHolder(master);
+		plugin.horsePlayerPair.put(slave, spawned);
 	}
 
 }

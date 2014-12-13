@@ -6,8 +6,12 @@ import java.util.UUID;
 import java.util.ArrayList;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -26,18 +30,42 @@ public class PlayerMovementListener implements Listener {
 	public void onPlayerMoveEvent(PlayerMoveEvent e) {
 		Player mover = e.getPlayer();
 		UUID moverUUID = mover.getUniqueId();
+		slaveMasterCheck(moverUUID, e);
+		horseMoveCheck(mover);
+		
+	}
+	
+	public void horseMoveCheck(Player p) {
+		if (plugin.horsePlayerPair.keySet().contains(p)) {
+			Horse horsey = plugin.horsePlayerPair.get(p);
+			horsey.teleport(p);
+			try {
+				horsey.getLeashHolder();
+			} catch (IllegalStateException e) {
+				horsey.setLeashHolder(PlayerLead.server.getPlayer(
+						plugin.slaveMasters.get(p.getUniqueId())));
+			}
+			
+		}
+	}
+	public void slaveMasterCheck(UUID moverUUID, PlayerMoveEvent e) {
 		for (Entry<UUID,UUID> entry : plugin.slaveMasters.entrySet()) {
 			if (entry.getKey().equals(moverUUID) || entry.getValue().equals(moverUUID)) {
 				Player slave = PlayerLead.server.getPlayer(entry.getKey());
 				Player master = PlayerLead.server.getPlayer(entry.getValue());
 				double[] info = calculateDistanceCoefficient(slave,master);
+				if (info[0] > PlayerLead.maxDistance*4) {
+					e.setCancelled(true);
+					return;
+				}
 				if (info[0] > PlayerLead.maxDistance) {
 					moveSlave(slave,master,info);
 				}
 			}
 		}
-
 	}
+	
+	
 	/**
 	 * Calculates the distance from the <code>master</code> and <code>slave</code> using Pythagoras. <br>
 	 * calculates the coefficient of Z expressed in X with z/x <br>
@@ -81,11 +109,28 @@ public class PlayerMovementListener implements Listener {
 		double amountOfX = Math.sqrt(1+Math.pow(coefficient, 2));
 		double newDeltaX = max/amountOfX;
 		double newDeltaZ = newDeltaX*coefficient;
-		double slaveX = master.getLocation().getX() + newDeltaX*inf[2];
-		double slaveZ = master.getLocation().getZ() + newDeltaZ*inf[3];
-		double slaveY = slave.getLocation().getY();
+		slave.getLocation().setX(master.getLocation().getX() + newDeltaX*inf[2]);
+		slave.getLocation().setZ(master.getLocation().getZ() + newDeltaZ*inf[3]);
+		slave.getLocation().setY(calculateSlaveY(slave,master));
 		
 		
-		slave.teleport(new Location(slave.getWorld(), slaveX, slaveY, slaveZ, slave.getLocation().getYaw(), slave.getLocation().getPitch()));
+	}
+	
+	public double calculateSlaveY(Player slave, Player master) {
+		double x = slave.getLocation().getX();
+		double z = slave.getLocation().getZ();
+		double lowest = Math.min(slave.getLocation().getY(), master.getLocation().getY());
+		Block b =slave.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
+		int i;
+		for (i= 0;(b == null || b.getType().equals(Material.AIR)) &&
+				Math.abs(slave.getLocation().getY() - master.getLocation().getY()) > 8 && i <20; i++)
+			lowest++;
+		if (i > 20 && calculateDistanceCoefficient(slave,master)[0] < 2) {
+			slave.getLocation().setX(master.getLocation().getX());
+			slave.getLocation().setZ(master.getLocation().getZ());
+			return slave.getLocation().getY();
+		}
+			
+		return lowest;
 	}
 }
