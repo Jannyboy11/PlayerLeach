@@ -36,7 +36,7 @@ public class MasterSlaveOnHitListener implements Listener {
 				attacker.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,1));
 				attacker.damage(1);
 			} else if (atkID.equals(en.getValue()) && defID.equals(en.getKey()) && plugin.checkLasso(attacker)) {
-					defender.damage(800);
+					e.setDamage(900);
 					defender.sendMessage("bad slave!");
 			}
 				
