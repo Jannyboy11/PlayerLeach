@@ -33,7 +33,7 @@ public class MasterSlaveOnHitListener implements Listener {
 		for (Entry<UUID,UUID> en : plugin.slaveMasters.entrySet()) {
 			if (atkID.equals(en.getKey()) && defID.equals(en.getValue())) {
 				e.setCancelled(true);
-				attacker.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,2,1));
+				attacker.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,1));
 				attacker.damage(1);
 			} else if (atkID.equals(en.getValue()) && defID.equals(en.getKey()) && plugin.checkLasso(attacker)) {
 					defender.damage(800);
