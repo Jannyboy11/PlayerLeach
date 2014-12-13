@@ -33,7 +33,7 @@ public class PlayerLead extends JavaPlugin {
 	/**
 	 * The Special leash that gets created to bind players.
 	 */
-	private static final ItemStack theLeash = new ItemStack(Material.LEASH);
+	private static ItemStack theLeash = new ItemStack(Material.LEASH);
 	
 	/**
 	 * The max distance a slave may be away from the master.
@@ -49,7 +49,10 @@ public class PlayerLead extends JavaPlugin {
 		a.setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!","",ChatColor.GRAY + "" +  ChatColor.ITALIC+" WE ARE NOT HELD ACCOUNTABLE"}));
 		a.setDisplayName(ChatColor.WHITE+ "The Human "+ ChatColor.GRAY +"\"Leash\"");;
 		theLeash.setItemMeta(a);
-		
+		Attributes test = new Attributes(theLeash);
+		 test.add(Attribute.newBuilder().name("Damage")
+				 .type(AttributeType.GENERIC_ATTACK_DAMAGE).amount(500).build());
+		theLeash = test.getStack();
 		logger.info("onEnable has been invoked!");
 		//initialise stuff! :D
 		server = getServer();
@@ -88,15 +91,13 @@ public class PlayerLead extends JavaPlugin {
 	
 	public boolean checkLasso(Player p){
 		//Sorry Jb, ItemStack is niet metaDatable, dus ik gebruik lore i.p.v. metaData.
-		return (getLasso().equals(new ItemStack(p.getItemInHand())));
+		return (getLasso().equals(p.getItemInHand()));
 	}
 	
 	
 	public ItemStack getLasso(){
-		Attributes test = new Attributes(theLeash);
-		 test.add(Attribute.newBuilder().name("Damage")
-				 .type(AttributeType.GENERIC_ATTACK_DAMAGE).amount(500).build());
-		return test.getStack();
+
+		return theLeash;
 	}
 	
 	public static void main(String[] args){

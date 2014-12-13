@@ -85,6 +85,7 @@ public class PlayerMovementListener implements Listener {
 		double slaveZ = master.getLocation().getZ() + newDeltaZ*inf[3];
 		double slaveY = slave.getLocation().getY();
 		
+		
 		slave.teleport(new Location(slave.getWorld(), slaveX, slaveY, slaveZ, slave.getLocation().getYaw(), slave.getLocation().getPitch()));
 	}
 }
