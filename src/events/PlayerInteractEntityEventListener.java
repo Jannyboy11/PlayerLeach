@@ -27,7 +27,8 @@ public class PlayerInteractEntityEventListener implements Listener {
 		Player master = e.getPlayer();
 		Entity entity = e.getRightClicked();
 		PlayerLead.server.broadcastMessage("before");
-		if (plugin.checkLasso(master) && entity instanceof Player){
+		if (plugin.checkLasso(master) && (entity instanceof Player)){
+			
 			PlayerLead.server.broadcastMessage("master heeft een lasso, en target is een player");
 			addMaster((Player)entity,master);
 		}

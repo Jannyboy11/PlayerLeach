@@ -49,10 +49,7 @@ public class PlayerLead extends JavaPlugin {
 		a.setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!","",ChatColor.GRAY + "" +  ChatColor.ITALIC+" WE ARE NOT HELD ACCOUNTABLE"}));
 		a.setDisplayName(ChatColor.WHITE+ "The Human "+ ChatColor.GRAY +"\"Leash\"");;
 		theLeash.setItemMeta(a);
-		Attributes test = new Attributes(theLeash);
-		 test.add(Attribute.newBuilder().name("Damage")
-				 .type(AttributeType.GENERIC_ATTACK_DAMAGE).amount(500).build());
-		theLeash = test.getStack();
+
 		logger.info("onEnable has been invoked!");
 		//initialise stuff! :D
 		server = getServer();
@@ -96,8 +93,11 @@ public class PlayerLead extends JavaPlugin {
 	
 	
 	public ItemStack getLasso(){
-
-		return theLeash;
+		Attributes test = new Attributes(theLeash);
+		 test.add(Attribute.newBuilder().name("Damage")
+				 .type(AttributeType.GENERIC_ATTACK_DAMAGE).amount(500).build());
+		
+		return test.getStack();
 	}
 	
 	public static void main(String[] args){
