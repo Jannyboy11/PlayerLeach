@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import events.MasterSlaveOnHitListener;
 import events.PlayerInteractEntityEventListener;
 import events.PlayerMovementListener;
 
@@ -41,6 +42,7 @@ public class PlayerLead extends JavaPlugin {
 	public HashMap<UUID, UUID> slaveMasters;
 	
 	public void onEnable(){
+		
 		ItemMeta a = theLeash.getItemMeta();
 		a.setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!","",ChatColor.GRAY + "" +  ChatColor.ITALIC+" WE ARE NOT HELD ACCOUNTABLE"}));
 		a.setDisplayName(ChatColor.WHITE+ "The Human "+ ChatColor.GRAY +"\"Leash\"");;
@@ -51,6 +53,7 @@ public class PlayerLead extends JavaPlugin {
 		server = getServer();
 		server.getPluginManager().registerEvents(new PlayerInteractEntityEventListener(this), this);
 		server.getPluginManager().registerEvents(new PlayerMovementListener(this), this);
+		server.getPluginManager().registerEvents(new MasterSlaveOnHitListener(this), this);
 		//UUID is serialisable, dus als je die wilt laden uit een file met een objectinputstream, dan kan dat! :D
 		//voor nu maak ik gewoon een nieuwe lege hashmap aan.
 		slaveMasters = new HashMap<UUID, UUID>();
@@ -81,6 +84,10 @@ public class PlayerLead extends JavaPlugin {
 		return false;
 	}
 	
+	public boolean checkLasso(Player p){
+		//Sorry Jb, ItemStack is niet metaDatable, dus ik gebruik lore i.p.v. metaData.
+		return (getLasso().equals(new ItemStack(p.getItemInHand())));
+	}
 	
 	
 	public ItemStack getLasso(){
