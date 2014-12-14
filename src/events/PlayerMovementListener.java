@@ -163,7 +163,7 @@ public class PlayerMovementListener implements Listener {
 			lowest++;
 		}
 			
-		if (i >19 20 && calculateDistanceCoefficient(x,y,z,master)[0] < 2) {
+		if (i >=19 && calculateDistanceCoefficient(x,y,z,master)[0] < 2) {
 			return -1;
 		}
 			
