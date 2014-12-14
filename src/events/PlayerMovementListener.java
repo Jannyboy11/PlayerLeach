@@ -15,6 +15,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.util.Vector;
 
 import playerlead.PlayerLead;
 
@@ -109,11 +110,15 @@ public class PlayerMovementListener implements Listener {
 		double amountOfX = Math.sqrt(1+Math.pow(coefficient, 2));
 		double newDeltaX = max/amountOfX;
 		double newDeltaZ = newDeltaX*coefficient;
-		plugin.server.broadcastMessage("in the move!");
-		slave.getLocation().setX(master.getLocation().getX() + newDeltaX*inf[2]);
-		slave.getLocation().setZ(master.getLocation().getZ() + newDeltaZ*inf[3]);
-		slave.getLocation().setY(calculateSlaveY(slave,master));
 		
+
+		float pitch = slave.getLocation().getPitch();
+		float yaw = slave.getLocation().getYaw();
+		double tempy = calculateSlaveY(slave,master);
+		double y=  tempy  == -1? slave.getLocation().getY() : tempy;
+		double x = tempy  == -1? master.getLocation().getX() : master.getLocation().getX() + newDeltaX*inf[2];
+		double z = tempy  == -1? master.getLocation().getZ() : master.getLocation().getZ() + newDeltaZ*inf[3];
+		slave.teleport(new Location(slave.getWorld(),x,y,z,yaw,pitch));
 		
 	}
 	
@@ -127,9 +132,7 @@ public class PlayerMovementListener implements Listener {
 				Math.abs(slave.getLocation().getY() - master.getLocation().getY()) > 8 && i <20; i++)
 			lowest++;
 		if (i > 20 && calculateDistanceCoefficient(slave,master)[0] < 2) {
-			slave.getLocation().setX(master.getLocation().getX());
-			slave.getLocation().setZ(master.getLocation().getZ());
-			return slave.getLocation().getY();
+			return -1;
 		}
 			
 		return lowest;
