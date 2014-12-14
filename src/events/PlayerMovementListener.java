@@ -109,6 +109,7 @@ public class PlayerMovementListener implements Listener {
 		double amountOfX = Math.sqrt(1+Math.pow(coefficient, 2));
 		double newDeltaX = max/amountOfX;
 		double newDeltaZ = newDeltaX*coefficient;
+		plugin.server.broadcastMessage("in the move!");
 		slave.getLocation().setX(master.getLocation().getX() + newDeltaX*inf[2]);
 		slave.getLocation().setZ(master.getLocation().getZ() + newDeltaZ*inf[3]);
 		slave.getLocation().setY(calculateSlaveY(slave,master));
