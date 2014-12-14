@@ -65,10 +65,10 @@ public class PlayerInteractEntityEventListener implements Listener {
 		spawned.setMaxDomestication(99999999);
 
 		try {
-			Field entitySpeed = Entity.class.getField("bb");
-			entitySpeed.setAccessible(true);
-			entitySpeed.set(spawned, 0.0f);
-		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			Field[] entitySpeed = Entity.class.getFields();
+			for(int i =0; i < entitySpeed.length; i ++)
+				plugin.getServer().broadcastMessage(entitySpeed[i].getName());
+		} catch (IllegalArgumentException | SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
