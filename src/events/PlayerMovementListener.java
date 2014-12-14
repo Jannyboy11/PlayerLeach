@@ -55,11 +55,12 @@ public class PlayerMovementListener implements Listener {
 				Player slave = PlayerLead.server.getPlayer(entry.getKey());
 				Player master = PlayerLead.server.getPlayer(entry.getValue());
 				double[] info = calculateDistanceCoefficient(slave,master);
+				double yDiff = Math.abs(slave.getLocation().getY() - master.getLocation().getY());
 				if (info[0] > PlayerLead.maxDistance*4) {
 					e.setCancelled(true);
 					return;
 				}
-				if (info[0] > PlayerLead.maxDistance) {
+				if (info[0] > PlayerLead.maxDistance || yDiff > 10 ) {
 					moveSlave(slave,master,info);
 				}
 			}
@@ -114,22 +115,24 @@ public class PlayerMovementListener implements Listener {
 
 		float pitch = slave.getLocation().getPitch();
 		float yaw = slave.getLocation().getYaw();
-		double tempy = calculateSlaveY(slave,master);
+
+		double tempx = inf[0] > max? master.getLocation().getX() + newDeltaX*inf[2] : slave.getLocation().getX();
+		double tempz = inf[0] > max? master.getLocation().getZ() + newDeltaZ*inf[3] : slave.getLocation().getZ();
+		double slavey = slave.getLocation().getY();
+		double tempy = calculateSlaveY(tempx,tempz,slavey,master);
 		double y=  tempy  == -1? slave.getLocation().getY() : tempy;
-		double x = tempy  == -1? master.getLocation().getX() : master.getLocation().getX() + newDeltaX*inf[2];
-		double z = tempy  == -1? master.getLocation().getZ() : master.getLocation().getZ() + newDeltaZ*inf[3];
+		double x = tempy  == -1? master.getLocation().getX() : tempx;
+		double z = tempy  == -1? master.getLocation().getZ() : tempz;
 		slave.teleport(new Location(slave.getWorld(),x,y,z,yaw,pitch));
 		
 	}
 	
-	public double calculateSlaveY(Player slave, Player master) {
-		double x = slave.getLocation().getX();
-		double z = slave.getLocation().getZ();
-		double lowest = Math.min(slave.getLocation().getY(), master.getLocation().getY());
-		Block b =slave.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
+	public double calculateSlaveY(double x, double z, double y, Player master) {
+		double lowest = Math.min(y, master.getLocation().getY());
+		Block b =master.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
 		int i;
 		for (i= 0;(b == null || b.getType().equals(Material.AIR)) &&
-				Math.abs(slave.getLocation().getY() - master.getLocation().getY()) > 8 && i <20; i++)
+				Math.abs(y - master.getLocation().getY()) > 8 && i <20; i++)
 			lowest++;
 		if (i > 20 && calculateDistanceCoefficient(slave,master)[0] < 2) {
 			return -1;
