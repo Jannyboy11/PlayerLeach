@@ -93,6 +93,32 @@ public class PlayerMovementListener implements Listener {
 		result[3] = slaveZ < masterZ ? -1 : 1;
 		return result;
 	}
+	
+	/**
+	 * Calculates the distance from the <code>master</code> and <code>slave</code> using Pythagoras. <br>
+	 * calculates the coefficient of Z expressed in X with z/x <br>
+	 * and calculates whether the slave delta coordinates is in negative x and z.
+	 * @param slave
+	 * @param master
+	 * @return a double array of length 4, where [0] is the distance between two players <br>
+	 * and [1] is the coefficient of Z/X -> Z expressed in X <br>
+	 * [2] is -1 if slave is on a lower X then master, otherwise 1 <br>
+	 * [3] is -1 if slave is on a lower Z then master, otherwise 1
+	 */
+	public double[] calculateDistanceCoefficient(double x, double y,double z, Player master) {
+		double slaveX = x;
+		double slaveZ = z;
+		double masterX = master.getLocation().getX();
+		double masterZ = master.getLocation().getZ();
+		double xDifference = Math.abs(Math.abs(masterX) - Math.abs(slaveX));
+		double zDifference = Math.abs(Math.abs(masterZ) - Math.abs(slaveZ));
+		double[] result = new double[4];
+		result[0] = Math.sqrt(Math.pow(zDifference, 2) + Math.pow(xDifference, 2));
+		result[1] = zDifference/xDifference;
+		result[2] = slaveX < masterX ? -1 : 1;
+		result[3] = slaveZ < masterZ ? -1 : 1;
+		return result;
+	}
 	/**
 	 * Moves a {@link Player Player slave} to a distance of {@link PlayerLead.maxDistance} from {@link Player Player master} <br>
 	 * this function preserves the angle at which the slave/master were by using the coefficient and <br>
@@ -119,7 +145,7 @@ public class PlayerMovementListener implements Listener {
 		double tempx = inf[0] > max? master.getLocation().getX() + newDeltaX*inf[2] : slave.getLocation().getX();
 		double tempz = inf[0] > max? master.getLocation().getZ() + newDeltaZ*inf[3] : slave.getLocation().getZ();
 		double slavey = slave.getLocation().getY();
-		double tempy = calculateSlaveY(tempx,tempz,slavey,master);
+		double tempy = calculateSlaveY(tempx,slavey,tempz,master);
 		double y=  tempy  == -1? slave.getLocation().getY() : tempy;
 		double x = tempy  == -1? master.getLocation().getX() : tempx;
 		double z = tempy  == -1? master.getLocation().getZ() : tempz;
@@ -127,14 +153,14 @@ public class PlayerMovementListener implements Listener {
 		
 	}
 	
-	public double calculateSlaveY(double x, double z, double y, Player master) {
+	public double calculateSlaveY(double x, double y, double z, Player master) {
 		double lowest = Math.min(y, master.getLocation().getY());
 		Block b =master.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
 		int i;
 		for (i= 0;(b == null || b.getType().equals(Material.AIR)) &&
 				Math.abs(y - master.getLocation().getY()) > 8 && i <20; i++)
 			lowest++;
-		if (i > 20 && calculateDistanceCoefficient(slave,master)[0] < 2) {
+		if (i > 20 && calculateDistanceCoefficient(x,y,z,master)[0] < 2) {
 			return -1;
 		}
 			
