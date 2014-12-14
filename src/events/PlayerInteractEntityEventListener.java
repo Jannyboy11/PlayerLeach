@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.event.EventHandler;
@@ -63,19 +64,34 @@ public class PlayerInteractEntityEventListener implements Listener {
 		Horse spawned = (Horse)slave.getWorld().spawnEntity(l, EntityType.HORSE);
 		spawned.setCustomNameVisible(false);
 		spawned.setMaxDomestication(99999999);
-
-		try {
-			Field[] entitySpeed = Entity.class.getFields();
-			for(int i =0; i < entitySpeed.length; i ++)
-				plugin.getServer().broadcastMessage(entitySpeed[i].getName());
-		} catch (IllegalArgumentException | SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		LivingEntity sp = (LivingEntity) spawned;
+		setSpeed(LivingEntity.class,sp,0F);
+		spawned = (Horse) sp;
 		spawned.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0,true));
 		spawned.teleport(slave);
 		spawned.setLeashHolder(master);
 		plugin.horsePlayerPair.put(slave, spawned);
 	}
+	
+	public void setSpeed(Class<LivingEntity> clazz, LivingEntity entity, float amount){
+        Field speed = null;
+        try {
+            speed = clazz.getDeclaredField("bw");
+            speed.setAccessible(true);
+            speed.setFloat(entity, amount);
+        }
+        catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
