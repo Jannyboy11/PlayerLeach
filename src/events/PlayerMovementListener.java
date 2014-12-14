@@ -157,8 +157,8 @@ public class PlayerMovementListener implements Listener {
 		double lowest = Math.min(y, master.getLocation().getY())-5;
 		Block b = master.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
 		int i;
-		for (i= 0;(!b.getType().equals(Material.AIR)) &&
-				Math.abs(y - master.getLocation().getY()) > 8 && i <20; i++) {
+		for (i= 0;(!b.getType().equals(Material.AIR)) ||
+				Math.abs(lowest - master.getLocation().getY()) > 8 && i <20; i++) {
 			b = master.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
 			lowest++;
 		}
