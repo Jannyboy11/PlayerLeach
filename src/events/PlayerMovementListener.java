@@ -154,12 +154,15 @@ public class PlayerMovementListener implements Listener {
 	}
 	
 	public double calculateSlaveY(double x, double y, double z, Player master) {
-		double lowest = Math.min(y, master.getLocation().getY());
-		Block b =master.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
+		double lowest = Math.min(y, master.getLocation().getY())-5;
+		Block b = master.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
 		int i;
-		for (i= 0;(b == null || b.getType().equals(Material.AIR)) &&
-				Math.abs(y - master.getLocation().getY()) > 8 && i <20; i++)
+		for (i= 0;(!b.getType().equals(Material.AIR)) &&
+				Math.abs(y - master.getLocation().getY()) > 8 && i <20; i++) {
+			b = master.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
 			lowest++;
+		}
+			
 		if (i > 20 && calculateDistanceCoefficient(x,y,z,master)[0] < 2) {
 			return -1;
 		}
