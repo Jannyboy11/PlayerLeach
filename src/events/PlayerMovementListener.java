@@ -56,10 +56,6 @@ public class PlayerMovementListener implements Listener {
 				Player master = PlayerLead.server.getPlayer(entry.getValue());
 				double[] info = calculateDistanceCoefficient(slave,master);
 				double yDiff = Math.abs(slave.getLocation().getY() - master.getLocation().getY());
-				if (info[0] > PlayerLead.maxDistance*4) {
-					e.setCancelled(true);
-					return;
-				}
 				if (info[0] > PlayerLead.maxDistance || yDiff > 10 ) {
 					moveSlave(slave,master,info);
 				}
