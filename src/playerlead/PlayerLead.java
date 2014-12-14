@@ -8,17 +8,24 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.UUID;
 
+import net.minecraft.server.v1_8_R1.EntityTypes;
+import net.minecraft.server.v1_8_R1.GroupDataEntity;
+import net.minecraft.server.v1_8_R1.World;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -58,6 +65,7 @@ public class PlayerLead extends JavaPlugin {
 	public HashMap<Player,Horse> horsePlayerPair;
 	
 	public void onEnable(){
+		load();
 		horsePlayerPair = new HashMap<Player,Horse>();
 		ItemMeta a = theLeash.getItemMeta();
 		a.setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!","",ChatColor.GRAY + "" +  ChatColor.ITALIC+" WE ARE NOT HELD ACCOUNTABLE"}));
@@ -95,7 +103,15 @@ public class PlayerLead extends JavaPlugin {
 				Player player = server.getPlayer(args[0]);
 				if (!sender.isOp() || player == null || !player.isOnline())
 					return false;
+				Location l  = player.getLocation();
+				CraftWorld world = (CraftWorld)player.getWorld();
+				World w = world.getHandle();
+				CustomChicken entity = new CustomChicken(w);
 				
+				entity.setPositionRotation(l.getX(), l.getY()+1, l.getZ(), 0, 90);
+				entity.prepare(null, (GroupDataEntity) null);
+				w.addEntity(entity,SpawnReason.CUSTOM);
+				entity.p(entity);
 				player.getInventory().addItem(getLasso());
 			}
 			return true;
@@ -106,9 +122,10 @@ public class PlayerLead extends JavaPlugin {
 	public static void load() {
 		  try {
 
-		    Method a = EntityType.class.getDeclaredMethod("a", Class.class, String.class, int.class);
+			  Method a = EntityTypes.class.getDeclaredMethod("a", new Class<?>[]{Class.class, String.class, int.class});
+        
 		    a.setAccessible(true); 
-		    a.invoke(a, CustomChicken.class, "SuperChick", 93);
+		    a.invoke(null, CustomChicken.class, "CCHICKEN", 121);
 
 		} catch (Exception e) {
 		//Insert handling code here
