@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -33,6 +34,7 @@ import playerlead.Attributes.AttributeType;
 import events.MasterSlaveOnHitListener;
 import events.PlayerInteractEntityEventListener;
 import events.PlayerMovementListener;
+import events.StopSlaveListener;
 
 public class PlayerLead extends JavaPlugin {
 	/*
@@ -67,6 +69,8 @@ public class PlayerLead extends JavaPlugin {
 		server.getPluginManager().registerEvents(new PlayerInteractEntityEventListener(this), this);
 		server.getPluginManager().registerEvents(new PlayerMovementListener(this), this);
 		server.getPluginManager().registerEvents(new MasterSlaveOnHitListener(this), this);
+		server.getPluginManager().registerEvents(new StopSlaveListener(this), this);
+		
 		//UUID is serialisable, dus als je die wilt laden uit een file met een objectinputstream, dan kan dat! :D
 		//voor nu maak ik gewoon een nieuwe lege hashmap aan.
 		slaveMasters = new HashMap<UUID, UUID>();
@@ -86,6 +90,7 @@ public class PlayerLead extends JavaPlugin {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage("This command can only be run by a player.");
 			} else {
+				@SuppressWarnings("deprecation")
 				Player player = server.getPlayer(args[0]);
 				if (!sender.isOp() || player == null || !player.isOnline())
 					return false;

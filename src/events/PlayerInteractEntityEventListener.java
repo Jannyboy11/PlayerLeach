@@ -50,9 +50,10 @@ public class PlayerInteractEntityEventListener implements Listener {
 			plugin.slaveMasters.put(slave.getUniqueId(), master.getUniqueId());
 			master.sendMessage(slave.getName() + " has been added to your slaves. >:)");
 			slave.sendMessage(master.getName() +" has caught you! you are now his slave.");
-			PlayerLead.server.broadcastMessage(slave.setLeashHolder(master) +"");
+			spawnHorse(slave,master);
 		}
 	}
+	
 	
 	public void spawnHorse(Player slave, Player master) {
 		Location l  = slave.getLocation();
