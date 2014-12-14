@@ -146,24 +146,26 @@ public class PlayerMovementListener implements Listener {
 		double tempz = inf[0] > max? master.getLocation().getZ() + newDeltaZ*inf[3] : slave.getLocation().getZ();
 		double slavey = slave.getLocation().getY();
 		double tempy = calculateSlaveY(tempx,slavey,tempz,master);
-		double y=  tempy  == -1? slave.getLocation().getY() : tempy;
+		double y=  tempy  == -1? master.getLocation().getY() : tempy;
 		double x = tempy  == -1? master.getLocation().getX() : tempx;
 		double z = tempy  == -1? master.getLocation().getZ() : tempz;
+		
 		slave.teleport(new Location(slave.getWorld(),x,y,z,yaw,pitch));
 		
 	}
 	
 	public double calculateSlaveY(double x, double y, double z, Player master) {
-		double lowest = Math.min(y, master.getLocation().getY())-5;
+		double lowest = Math.min(y, master.getLocation().getY())-6;
 		Block b = master.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
 		int i;
 		for (i= 0;((b.getType().isSolid()) ||
-				Math.abs(lowest - master.getLocation().getY()) > 8) && i <30; i++) {
-			b = master.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
+				Math.abs(lowest - master.getLocation().getY()) > 8) && i <90; i++) {
 			lowest++;
+			b = master.getWorld().getBlockAt((int)x,(int)lowest,(int)z);
+			
 		}
 			
-		if (i >19 && calculateDistanceCoefficient(x,y,z,master)[0] < 2) {
+		if (i >88 && calculateDistanceCoefficient(x,y,z,master)[0] < 2) {
 			return -1;
 		}
 			
