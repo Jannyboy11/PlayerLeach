@@ -1,6 +1,7 @@
 package playerlead;
 
 import java.awt.Color;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -101,6 +102,18 @@ public class PlayerLead extends JavaPlugin {
 		}
 		return false;
 	}
+
+	public static void load() {
+		  try {
+
+		    Method a = EntityType.class.getDeclaredMethod("a", Class.class, String.class, int.class);
+		    a.setAccessible(true); 
+		    a.invoke(a, CustomChicken.class, "SuperChick", 93);
+
+		} catch (Exception e) {
+		//Insert handling code here
+		}
+		}
 	
 	public boolean checkLasso(Player p){
 		//Sorry Jb, ItemStack is niet metaDatable, dus ik gebruik lore i.p.v. metaData.

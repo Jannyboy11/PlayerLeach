@@ -64,34 +64,12 @@ public class PlayerInteractEntityEventListener implements Listener {
 		Horse spawned = (Horse)slave.getWorld().spawnEntity(l, EntityType.HORSE);
 		spawned.setCustomNameVisible(false);
 		spawned.setMaxDomestication(99999999);
-		LivingEntity sp = (LivingEntity) spawned;
-		setSpeed(LivingEntity.class,sp,0F);
-		spawned = (Horse) sp;
 		spawned.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0,true));
 		spawned.teleport(slave);
 		spawned.setLeashHolder(master);
 		plugin.horsePlayerPair.put(slave, spawned);
 	}
 	
-	public void setSpeed(Class<LivingEntity> clazz, LivingEntity entity, float amount){
-        Field speed = null;
-        try {
-            speed = clazz.getDeclaredField("bw");
-            speed.setAccessible(true);
-            speed.setFloat(entity, amount);
-        }
-        catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        catch (SecurityException e) {
-            e.printStackTrace();
-        }
-        catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-        catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 }
