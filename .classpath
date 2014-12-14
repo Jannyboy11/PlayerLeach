@@ -8,5 +8,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="spigot-1.8-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="citizensapi-2.0.14-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.UUID;
 import java.util.ArrayList;
 
+import net.citizensnpcs.api.npc.NPC;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -36,10 +38,13 @@ public class PlayerInteractEntityEventListener implements Listener {
 		Player master = e.getPlayer();
 		Entity entity = e.getRightClicked();
 		PlayerLead.server.broadcastMessage("before");
-		if (plugin.checkLasso(master) && (entity instanceof Player)){
-			
+		if (plugin.checkLasso(master) && (entity instanceof Player) && !(entity instanceof NPC)){
+			try {
+				NPC test = (NPC) entity;
+			} catch (Exception e2) {
 			PlayerLead.server.broadcastMessage("master heeft een lasso, en target is een player");
 			addMaster((Player)entity,master);
+			}
 		}
 		
 	}

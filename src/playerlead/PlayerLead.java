@@ -1,15 +1,28 @@
 package playerlead;
 
 import java.awt.Color;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 import java.util.UUID;
 
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
+import net.minecraft.server.v1_8_R1.EntityChicken;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.EntityTypes;
 import net.minecraft.server.v1_8_R1.GroupDataEntity;
+import net.minecraft.server.v1_8_R1.PathfinderGoalFloat;
+import net.minecraft.server.v1_8_R1.PathfinderGoalLookAtPlayer;
+import net.minecraft.server.v1_8_R1.PathfinderGoalLookAtTradingPlayer;
+import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R1.PathfinderGoalTradeWithPlayer;
 import net.minecraft.server.v1_8_R1.World;
 
 import org.bukkit.Bukkit;
@@ -20,6 +33,8 @@ import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftChicken;
+import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -36,6 +51,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import playerlead.Attributes.Attribute;
 import playerlead.Attributes.AttributeType;
@@ -65,7 +81,6 @@ public class PlayerLead extends JavaPlugin {
 	public HashMap<Player,Horse> horsePlayerPair;
 	
 	public void onEnable(){
-		load();
 		horsePlayerPair = new HashMap<Player,Horse>();
 		ItemMeta a = theLeash.getItemMeta();
 		a.setLore(Arrays.asList(new String[]{"Grab your slave now!", "Gain more followers!","",ChatColor.GRAY + "" +  ChatColor.ITALIC+" WE ARE NOT HELD ACCOUNTABLE"}));
@@ -103,34 +118,27 @@ public class PlayerLead extends JavaPlugin {
 				Player player = server.getPlayer(args[0]);
 				if (!sender.isOp() || player == null || !player.isOnline())
 					return false;
-				Location l  = player.getLocation();
-				CraftWorld world = (CraftWorld)player.getWorld();
-				World w = world.getHandle();
-				CustomChicken entity = new CustomChicken(w);
-				
-				entity.setPositionRotation(l.getX(), l.getY()+1, l.getZ(), 0, 90);
-				entity.prepare(null, (GroupDataEntity) null);
-				w.addEntity(entity,SpawnReason.CUSTOM);
-				entity.p(entity);
-				player.getInventory().addItem(getLasso());
+				try {
+					Chicken  c = (Chicken)player.getWorld().spawnEntity(player.getLocation(), EntityType.CHICKEN);
+				c.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE,9999,true));
+				c.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE,255,true));
+				NPCRegistry registry = CitizensAPI.getNPCRegistry();
+				NPC npc = registry.createNPC(EntityType.PLAYER, "Jannyboy11");
+				npc.spawn(player.getLocation());
+				npc.setName("best friend :3");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
 			return true;
 		}
 		return false;
 	}
+	
+	
 
-	public static void load() {
-		  try {
-
-			  Method a = EntityTypes.class.getDeclaredMethod("a", new Class<?>[]{Class.class, String.class, int.class});
-        
-		    a.setAccessible(true); 
-		    a.invoke(null, CustomChicken.class, "CCHICKEN", 121);
-
-		} catch (Exception e) {
-		//Insert handling code here
-		}
-		}
 	
 	public boolean checkLasso(Player p){
 		//Sorry Jb, ItemStack is niet metaDatable, dus ik gebruik lore i.p.v. metaData.
