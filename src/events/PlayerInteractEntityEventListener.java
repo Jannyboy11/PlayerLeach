@@ -1,5 +1,6 @@
 package events;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import playerlead.Attributes;
 import playerlead.PlayerLead;
 
 public class PlayerInteractEntityEventListener implements Listener {
@@ -61,6 +63,15 @@ public class PlayerInteractEntityEventListener implements Listener {
 		Horse spawned = (Horse)slave.getWorld().spawnEntity(l, EntityType.HORSE);
 		spawned.setCustomNameVisible(false);
 		spawned.setMaxDomestication(99999999);
+
+		try {
+			Field entitySpeed = Entity.class.getField("bb");
+			entitySpeed.setAccessible(true);
+			entitySpeed.set(spawned, 0.0f);
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		spawned.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0,true));
 		spawned.teleport(slave);
 		spawned.setLeashHolder(master);
