@@ -40,6 +40,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Style;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Villager.Profession;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -123,9 +125,10 @@ public class PlayerLead extends JavaPlugin {
 				c.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE,9999,true));
 				c.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE,255,true));
 				NPCRegistry registry = CitizensAPI.getNPCRegistry();
-				NPC npc = registry.createNPC(EntityType.PLAYER, "Jannyboy11");
+				NPC npc = registry.createNPC(EntityType.VILLAGER,"");
+				
 				npc.spawn(player.getLocation());
-				npc.setName("best friend :3");
+				((Villager)npc.getEntity()).setProfession(Profession.PRIEST);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import net.citizensnpcs.api.npc.NPC;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -17,6 +19,9 @@ import org.bukkit.entity.Horse.Style;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerInventoryEvent;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -32,6 +37,20 @@ public class PlayerInteractEntityEventListener implements Listener {
 		plugin = pl;
 	}
 	
+	@EventHandler
+	public void chest(PlayerInteractEvent e) {
+		Player player = e.getPlayer();
+		Block block = e.getClickedBlock();
+		
+		if (block.getType().equals(Material.WORKBENCH) /*&& AutoWorkTable.isAutoTable(block)*/) {
+			InventoryView inv =player.getOpenInventory();
+			/*AutoWorkTable.openTable(inv)*/;
+			//fills in the inventory with a recipe
+			//somehow check for dupe glitches
+			
+		}
+			
+	}
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEntityEvent e){
 		
